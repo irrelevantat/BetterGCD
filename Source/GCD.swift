@@ -84,7 +84,6 @@ public class GCD: GCDPipe<Any>{
         return self
     }
     
-    
 }
 
 

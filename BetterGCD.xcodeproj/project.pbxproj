@@ -55,8 +55,8 @@
 		9E35CFD21D678C9500CBCA17 = {
 			isa = PBXGroup;
 			children = (
-				9E35CFDE1D678C9500CBCA17 /* BetterGCD */,
-				9E35CFEA1D678C9500CBCA17 /* BetterGCDTests */,
+				9E35CFDE1D678C9500CBCA17 /* Source */,
+				9E35CFEA1D678C9500CBCA17 /* Tests */,
 				9E35CFDD1D678C9500CBCA17 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -70,23 +70,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9E35CFDE1D678C9500CBCA17 /* BetterGCD */ = {
+		9E35CFDE1D678C9500CBCA17 /* Source */ = {
 			isa = PBXGroup;
 			children = (
 				9E35CFDF1D678C9500CBCA17 /* BetterGCD.h */,
 				9E35CFE11D678C9500CBCA17 /* Info.plist */,
 				9E35CFF61D678CB300CBCA17 /* GCD.swift */,
 			);
-			path = BetterGCD;
+			path = Source;
 			sourceTree = "<group>";
 		};
-		9E35CFEA1D678C9500CBCA17 /* BetterGCDTests */ = {
+		9E35CFEA1D678C9500CBCA17 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
 				9E35CFEB1D678C9500CBCA17 /* BetterGCDTests.swift */,
 				9E35CFED1D678C9500CBCA17 /* Info.plist */,
 			);
-			path = BetterGCDTests;
+			path = Tests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -386,6 +386,7 @@
 				9E35CFF21D678C9500CBCA17 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		9E35CFF31D678C9500CBCA17 /* Build configuration list for PBXNativeTarget "BetterGCDTests" */ = {
 			isa = XCConfigurationList;
@@ -394,6 +395,7 @@
 				9E35CFF51D678C9500CBCA17 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
