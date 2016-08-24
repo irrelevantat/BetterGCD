@@ -79,7 +79,12 @@ GCD().async {
 
 ## Installation
 
-BetterGCD will be available for Cocoapods soon.
+BetterGCD is available through [CocoaPods](http://cocoapods.org). To install
+it, simply add the following line to your Podfile:
+
+```ruby
+pod 'BetterGCD', '~>0.1'
+```
 
 ## License
 
