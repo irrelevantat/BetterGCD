@@ -90,14 +90,14 @@ class BetterGCDPipeTests: XCTestCase {
                 XCTFail()
                 return nil
             }
-            XCTAssertEqualWithAccuracy(abs(date.timeIntervalSinceNow), 1, accuracy: 0.2)
+            XCTAssertEqualWithAccuracy(abs(date.timeIntervalSinceNow), 1, accuracy: 0.4)
             return NSDate()
         }.after(2).async { (date) -> (NSDate?) in
             guard let date = date else {
                 XCTFail()
                 return nil
             }
-            XCTAssertEqualWithAccuracy(abs(date.timeIntervalSinceNow), 2, accuracy: 0.2)
+            XCTAssertEqualWithAccuracy(abs(date.timeIntervalSinceNow), 2, accuracy: 0.4)
             expectation.fulfill()
             return nil
         }
@@ -207,6 +207,76 @@ class BetterGCDPipeTests: XCTestCase {
         }.catching { error in
             print("Error: \(error) in async block")
         }
+        
+    }
+    
+    func testDelayedAddition()
+    {
+        var testOrder = (0...11).reverse().map { $0 }
+        let expectation = self.expectationWithDescription("last block")
+        
+        let pipe = GCD().async { 
+            XCTAssertTrue(testOrder.popLast() == 1)
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1.0*Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
+            // What do you want to do?
+            
+            pipe.async {
+                XCTAssertTrue(testOrder.popLast() == 2)
+                expectation.fulfill()
+            }.async({ 
+                XCTAssertTrue(testOrder.popLast() == 3)
+                expectation.fulfill()
+            })
+            
+        })
+        
+        XCTAssertTrue(testOrder.popLast() == 0)
+
+        self.waitForExpectationsWithTimeout(30, handler: nil)
+
+    }
+    
+    func testDelayedAdditionPipe ()
+    {
+        
+        var testOrder = (0...11).reverse().map { $0 }
+        let expectation = self.expectationWithDescription("last block")
+        
+        let pipe = GCDPipe<Int>().async { _ in
+            let counter = testOrder.popLast()
+            XCTAssertTrue(counter == 1)
+            return counter
+        }
+        
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1.0*Double(NSEC_PER_SEC))), dispatch_get_main_queue(), {
+            // What do you want to do?
+            
+            pipe.async { pipe in
+                
+                let counter = testOrder.popLast()
+                XCTAssertTrue(pipe == 1)
+                XCTAssertTrue(counter == (pipe!+1))
+                
+                return counter
+                
+                }.async({pipe in
+                    
+                    let counter = testOrder.popLast()
+                    XCTAssertTrue(pipe == 2)
+                    XCTAssertTrue(counter == (pipe!+1))
+                    expectation.fulfill()
+                    
+                    return counter
+                })
+            
+        })
+        
+        XCTAssertTrue(testOrder.popLast() == 0)
+        
+        self.waitForExpectationsWithTimeout(30, handler: nil)
+
         
     }
     

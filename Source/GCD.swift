@@ -48,6 +48,11 @@ public class GCD: GCDPipe<Any>{
     public func async(execution: SimpleExecutionBlock) -> GCD
     {
         self.execution = BlockType<Any>.SimpleExecutionBlock(execution)
+        
+        if self.previous?.executed == true {
+            self.fire(cachedReturnValue)
+        }
+
         self.next = GCD(previous: self)
         return self.next as! GCD
     }
@@ -105,6 +110,9 @@ public class GCDPipe<T> {
     
     private var execution: BlockType<T>?
     
+    private var executed: Bool = false
+    private var cachedReturnValue: T? = nil
+    
     //var queue: dispatch_queue_t?
     //var after: NSTimeInterval?
     
@@ -131,6 +139,9 @@ public class GCDPipe<T> {
         self.previous = previous
         // stay on the same queue by default
         self.queue = previous.queue
+        
+        
+        
     }
     
     /**
@@ -143,6 +154,8 @@ public class GCDPipe<T> {
         let block: dispatch_block_t = {
             
             guard let execution = self.execution else {
+                // no block available, save return value, for later
+                self.cachedReturnValue = chainValue
                 return
             }
             
@@ -184,8 +197,10 @@ public class GCDPipe<T> {
                 break
             case .CatchBlock:
                 // no need to call catch block
-                return
+                break
             }
+            
+            self.executed = true
             
         }
         
@@ -240,6 +255,11 @@ public class GCDPipe<T> {
     public func async(execution: AdvancedExecutionBlock) -> GCDPipe<T>
     {
         self.execution = BlockType<T>.AdvancedExecutionBlock(execution)
+        
+        if self.previous?.executed == true {
+            self.fire(cachedReturnValue)
+        }
+        
         self.next = GCDPipe<T>(previous: self)
         return self.next!
     }
